@@ -31,6 +31,8 @@ public class RenderFromCode : MonoBehaviour
 
         _term.Print(0, 0, "Hello!");
         _aspectTerm.Print(0, 0, "Hello!");
+
+        _aspectTerm.WithTileSize(new float2(.5f, 1));
     }
 
     private void OnDisable()
@@ -55,12 +57,17 @@ public class RenderFromCode : MonoBehaviour
         _term.LateUpdate();
         _aspectTerm.LateUpdate();
 
+        float3 up = new float3(0, _size.y, 0) * .5f;
         float3 p = new float3(0, _size.y, 0);
 
-        Graphics.DrawMesh(_term.Mesh, FromPos(-p * .5f), _material, 0);
+        p.x = _size.x * .5f;
+        Graphics.DrawMesh(_term.Mesh, FromPos(p + up), _material, 0);
+
+        p.x = _size.x * .5f * .5f;
+        p.y = -1;
         Graphics.DrawMesh(
             _aspectTerm.Mesh, 
-            FromPos((p * .5f) + new float3(0, 1, 0)), 
+            FromPos(p + new float3(0, 1, 0)), 
             _aspectMar, 0);
     }
 

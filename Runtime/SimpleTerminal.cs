@@ -191,6 +191,10 @@ namespace Sark.Terminals
 
         public SimpleTerminal WithTileSize(float2 tileSize)
         {
+            if (tileSize.Equals(_tileSize))
+                return this;
+
+            _isDirty = true;
             _tileSize = tileSize;
             _backend.WithTileSize(tileSize);
             return this;

@@ -133,7 +133,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1752006360}
   - component: {fileID: 1752006359}
-  - component: {fileID: 1752006361}
   m_Layer: 0
   m_Name: RenderFromCode
   m_TagString: Untagged
@@ -157,7 +156,7 @@ MonoBehaviour:
     x: 15
     y: 1
   _material: {fileID: 2100000, guid: 1d4c98ecad10fe644a9cf862d7c4a5b9, type: 2}
-  _aspectMar: {fileID: 2100000, guid: 181307059e8d9a844ad3335a8de50e46, type: 2}
+  _aspectMar: {fileID: 2100000, guid: e873fca38aa86a24e8f02edce54fa8b8, type: 2}
 --- !u!4 &1752006360
 Transform:
   m_ObjectHideFlags: 0
@@ -172,18 +171,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1752006361
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1752006358}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e87d4985be8ff841bbf3522fbb29fdd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2113664448
 GameObject:
   m_ObjectHideFlags: 0
