@@ -39,32 +39,32 @@ namespace Sark.Terminals
                     16 - 1 - (glyph / 16));
                 float2 uvOrigin = (float2)glyphIndex * uvSize;
 
-                var fg = tile.fgColor;
-                var bg = tile.bgColor;
+                var fg = FromColor(tile.fgColor);
+                var bg = FromColor(tile.bgColor);
 
                 vertData[vi + 0] = new VertTileData
                 {
                     UV = uvOrigin + uvUp,
-                    FGColor = FromColor(fg),
-                    BGColor = FromColor(bg)
+                    FGColor = fg,
+                    BGColor = bg
                 };
                 vertData[vi + 1] = new VertTileData
                 {
                     UV = uvOrigin + uvRight + uvUp,
-                    FGColor = FromColor(fg),
-                    BGColor = FromColor(bg)
+                    FGColor = fg,
+                    BGColor = bg
                 };
                 vertData[vi + 2] = new VertTileData
                 {
                     UV = uvOrigin,
-                    FGColor = FromColor(fg),
-                    BGColor = FromColor(bg)
+                    FGColor = fg,
+                    BGColor = bg
                 };
                 vertData[vi + 3] = new VertTileData
                 {
                     UV = uvOrigin + uvRight,
-                    FGColor = FromColor(fg),
-                    BGColor = FromColor(bg)
+                    FGColor = fg,
+                    BGColor = bg
                 };
             }
         }
@@ -73,8 +73,8 @@ namespace Sark.Terminals
             NativeArray<float3> verts,
             NativeArray<ushort> indices)
         {
-            Assert.IsFalse(math.any(tileSize == 0));
-            Assert.IsFalse(math.any(size == 0));
+            Assert.IsFalse(math.any(tileSize <= 0));
+            Assert.IsFalse(math.any(size <= 0));
 
             float3 worldSize = new float3(size * tileSize, 0);
             float3 start = -worldSize / 2f;

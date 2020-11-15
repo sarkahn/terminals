@@ -1,44 +1,74 @@
-using Sark.Terminals;
-using System.Collections;
-using System.Collections.Generic;
+using Sark.Common;
+using Sark.Terminals.TerminalExtensions;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 
-using static Sark.Terminals.TerminalExtensions.TerminalExtension;
+using Sark.Common.CameraExtensions;
+using System.Collections;
 
 namespace Sark.Terminals
 {
+    [ExecuteAlways]
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public class TerminalBehaviour : MonoBehaviour
     {
+        const string DefaultMaterialPath = "Terminal8x8";
+
         SimpleTerminal _term;
 
         [SerializeField]
         int2 _size = new int2(80,40);
 
         [SerializeField]
-        float2 _tileSize = 1;
+        [HideInInspector]
+        MeshRenderer _renderer;
+
+        Material _originalMat;
+
+        public TileData Tiles => _term.Tiles;
+
+        [SerializeField]
+        bool _pixelSnap = true;
 
         private void OnEnable()
         {
             _term = new SimpleTerminal(_size.x, _size.y, Allocator.Persistent);
 
+            _renderer = GetComponent<MeshRenderer>();
             GetComponent<MeshFilter>().sharedMesh = _term.Mesh;
-            var renderer = GetComponent<MeshRenderer>();
-            if( renderer.sharedMaterial == null )
+            if( _renderer.sharedMaterial == null )
             {
-                renderer.sharedMaterial = Resources.Load<Material>("TerminalMaterial");
+                _renderer.sharedMaterial = Resources.Load<Material>(DefaultMaterialPath);
             }
 
-            _term.Tiles.ScrambleJob().Run();
-            _term.SetDirty();
+            _originalMat = _renderer.sharedMaterial;
         }
 
         private void OnDisable()
         {
             _term.Dispose();
+
+            _renderer.sharedMaterial = _originalMat;
+        }
+
+        public TerminalBehaviour WithFont(Material mat)
+        {
+            _renderer.sharedMaterial = mat;
+
+            float2 tileSize = GetTileSize();
+            //Debug.Log($"Setting new tilesize based on {tex.name}: {tileSize}");
+            _term.WithTileSize(tileSize);
+
+            return this;
+        }
+
+        public TerminalBehaviour WithSize(int w, int h)
+        {
+            _size = new int2(w, h);
+            _term.Resize(w, h);
+            return this;
         }
 
         public void Resize(int w, int h) => _term.Resize(w, h);
@@ -75,9 +105,55 @@ namespace Sark.Terminals
         /// </summary>
         public void SetDirty() => _term.SetDirty();
 
+        float2 GetTileSize()
+        {
+            var tex = _renderer.sharedMaterial.mainTexture;
+            float w = tex.width / 16;
+            float h = tex.height / 16;
+            w = w / h;
+            h = 1;
+            return new float2(w, h);
+        }
+
+        float2 GetPixelWorldSize()
+        {
+            var tex = _renderer.sharedMaterial.mainTexture;
+            float w = 1f / (tex.width / 16);
+            float h = 1f / (tex.height / 16);
+            return new float2(w, h);
+        }
+
+        public float3 GetWorldSize()
+        {
+            var tileSize = GetTileSize();
+            var p = new float3(_size, .1f);
+            p.xy *= tileSize;
+            return p;
+        }
+
+        public TerminalBehaviour WithScreenPosition(float x, float y, 
+            float alignX, float alignY)
+        {
+            var size = GetWorldSize();
+            var p = Camera.main.GetAlignedViewportPosition(
+                new float2(x, y), new float2(alignX, alignY), size.xy);
+
+            transform.position = p;
+            return this;
+        }
+
         void Update()
         {
             _term.EarlyUpdate();
+
+            if(_pixelSnap)
+            {
+                var pixelSize = GetPixelWorldSize();
+                float size = math.max(pixelSize.x, pixelSize.y);
+                float3 p = transform.position;
+                p.xy = MathUtil.roundedincrement(p.xy, size);
+                transform.position = p;
+            }
         }
 
         public void LateUpdate()
@@ -98,15 +174,38 @@ namespace Sark.Terminals
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (!isActiveAndEnabled || !Application.isPlaying)
+            if (!isActiveAndEnabled)
+                return;
+
+            if (!Application.isPlaying)
+                _originalMat = _renderer.sharedMaterial;
+
+            if (_term == null || _renderer == null)
                 return;
 
             _term.Resize(_size.x, _size.y);
-            _term.WithTileSize(_tileSize);
+            if (_renderer != null 
+                && _renderer.sharedMaterial != null 
+                && _renderer.sharedMaterial.mainTexture != null)
 
-            _term.Tiles.ScrambleJob().Run();
-            _term.SetDirty();
+            WithFont(_renderer.sharedMaterial);
         }
 #endif
+
+        public static TerminalBehaviour CreateAtScreenPosition(string name, 
+            int sizeX, int sizeY,
+            float x, float y, float alignX, float alignY)
+        {
+            var go = new GameObject(name, typeof(TerminalBehaviour));
+            var term = go.GetComponent<TerminalBehaviour>().WithSize(sizeX, sizeY);
+
+            term.WithScreenPosition(x, y, alignX, alignY);
+
+            //term.Tiles.ScrambleJob().Run();
+            //term.SetDirty();
+
+            return term;
+        }
+
     }
 }

@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Packages/com.sark.terminals/Samples/Circle/Circle.unity
-    guid: 1ea4b4566917a3a4e9739c60a23ba3b1
+    path: Assets/SpawnTest/SpawnTest.unity
+    guid: 4914b0ee3c562a0478c1078a9bcb4ebc
   m_configObjects: {}

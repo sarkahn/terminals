@@ -11,11 +11,6 @@ using static Sark.Terminals.BackendUtility;
 
 namespace Sark.Terminals
 {
-    // TODO: 
-    /*  Rebuild automatically when tile size changes
-     *  Derive tile size automatically from texture ("WithFont" or "WithTexture")
-     */
-
     /// <summary>
     /// A rendering backend using Unity's "Simple Mesh API" 
     /// https://docs.unity3d.com/2019.3/Documentation/ScriptReference/Mesh.html
@@ -167,20 +162,26 @@ namespace Sark.Terminals
                     MeshUpdateFlags.DontResetBoneBounds
                     );
 
-                mesh.SetSubMesh(0, new SubMeshDescriptor(0, _indices.Length));
+                mesh.SetSubMesh(0, new SubMeshDescriptor(0, _indices.Length),
+                    MeshUpdateFlags.DontValidateIndices |
+                    MeshUpdateFlags.DontNotifyMeshUsers |
+                    MeshUpdateFlags.DontRecalculateBounds |
+                    MeshUpdateFlags.DontResetBoneBounds
+                    );
 
                 mesh.RecalculateBounds();
+
+                _sizeChanged = false;
             }
 
             //Debug.Log("Uploading tile data to mesh");
             _tileDataJob.Complete();
 
-            mesh.SetVertexBufferData(_vertData, 0, 0, _vertData.Length, 1, MeshUpdateFlags.DontRecalculateBounds | 
+            mesh.SetVertexBufferData(_vertData, 0, 0, _vertData.Length, 1,                         MeshUpdateFlags.DontRecalculateBounds | 
                 MeshUpdateFlags.DontValidateIndices |
                 MeshUpdateFlags.DontNotifyMeshUsers |
-                MeshUpdateFlags.DontResetBoneBounds );
-
-            _sizeChanged = false;
+                MeshUpdateFlags.DontResetBoneBounds 
+                );
         }
 
         public void UpdateDataAndUploadToMesh(TileData tiles, Mesh mesh)
