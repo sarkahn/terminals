@@ -1,3 +1,10 @@
+## [0.0.6](https://github.com/sarkahn/terminals/compare/v0.0.5...v0.0.6) (2020-11-17)
+
+
+### Bug Fixes
+
+* Added menu option to create terminal, fixed dependency error from backend tile job ([4a91fc5](https://github.com/sarkahn/terminals/commit/4a91fc51593607ffce760da669c9242b34313d10))
+
 ## [0.0.5](https://github.com/sarkahn/terminals/compare/v0.0.4...v0.0.5) (2020-11-17)
 
 
