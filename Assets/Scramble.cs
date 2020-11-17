@@ -6,36 +6,50 @@ using Unity.Jobs;
 using UnityEngine;
 
 using static Sark.Terminals.CodePage437;
+using Sark.Terminals.TerminalExtensions;
 
+[ExecuteAlways]
 public class Scramble : MonoBehaviour
 {
-    private void Start()
-    {
-        var term = GetComponent<TerminalBehaviour>();
-        var tiles = term.Tiles;
 
-        new ScrambleJob
-        {
-            Tiles = tiles,
-            Random = new Unity.Mathematics.Random(
-                (uint)Random.Range(1, int.MaxValue)
-        )}.Run();
+    TerminalBehaviour _term;
+
+    private void OnEnable()
+    {
+        _term = GetComponent<TerminalBehaviour>();
     }
 
-    [BurstCompile]
-    struct ScrambleJob : IJob
+    private void Update()
     {
-        public TileData Tiles;
-        public Unity.Mathematics.Random Random;
-
-        public void Execute()
-        {
-            for (int i = 0; i < Tiles.Length; ++i)
-            {
-                var t = Tiles[i];
-                t.glyph = ToCP437((char)Random.NextInt(0, 255));
-                Tiles[i] = t;
-            }
-        }
+        Go();
     }
+
+    void Go()
+    {
+        if (_term == null)
+            return;
+
+        var tiles = _term.Tiles;
+
+        tiles.ScrambleJob().Run();
+
+        _term.SetDirty();
+    }
+
+    //[BurstCompile]
+    //struct ScrambleJob : IJob
+    //{
+    //    public TileData Tiles;
+    //    public Unity.Mathematics.Random Random;
+
+    //    public void Execute()
+    //    {
+    //        for (int i = 0; i < Tiles.Length; ++i)
+    //        {
+    //            var t = Tiles[i];
+    //            t.glyph = ToCP437((char)Random.NextInt(0, 255));
+    //            Tiles[i] = t;
+    //        }
+    //    }
+    //}
 }

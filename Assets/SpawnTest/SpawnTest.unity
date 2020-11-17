@@ -167,7 +167,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 8
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -387,11 +387,11 @@ MonoBehaviour:
   _clearCamera: {fileID: 110241234}
   _pixelCam: {fileID: 1785430698}
   _tileCount:
-    x: 50
-    y: 20
+    x: 44
+    y: 16
   _tileSize:
-    x: 8
-    y: 8
+    x: 16
+    y: 16
   _clearColor: {r: 0, g: 0, b: 0, a: 1}
   _drawGrid: 0
   _gridColorOdd: {r: 0.75, g: 0, b: 0, a: 0.35}
@@ -408,9 +408,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c88f5cead0c0b2a4eb05b5900433f8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AssetsPPU: 8
-  m_RefResolutionX: 400
-  m_RefResolutionY: 160
+  m_AssetsPPU: 16
+  m_RefResolutionX: 704
+  m_RefResolutionY: 256
   m_UpscaleRT: 1
   m_PixelSnapping: 0
   m_CropFrameX: 1
@@ -443,7 +443,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 8
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2

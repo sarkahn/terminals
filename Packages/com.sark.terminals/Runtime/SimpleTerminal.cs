@@ -6,6 +6,14 @@ using Unity.Mathematics;
 using UnityEngine;
 
 using Sark.Terminals.TerminalExtensions;
+using Sark.Common.GridUtil;
+
+// TODO : TerminalBehaviour with a 8x16 material font should automatically adjust it's own tilesize - ensure it works with cameraextension.align too
+// TODO : Add "box" functions for border (IE: border.WithCorners('a').WithTitle("Hello"))
+
+// This code is based on the RLTK Terminals made for rust by TheBracket:
+// https://github.com/thebracket/bracket-lib/tree/master/bracket-terminal
+// https://github.com/thebracket/bracket-lib/blob/master/LICENSE
 
 namespace Sark.Terminals
 {
@@ -25,7 +33,14 @@ namespace Sark.Terminals
 
         float2 _tileSize = 1;
 
-        public TileData Tiles => _tiles;
+        public TileData Tiles
+        {
+            get
+            {
+                _backend.CompleteTileJob();
+                return _tiles;
+            }
+        }
 
         public int2 Size => _size;
         public int Width => _size.x;
@@ -68,10 +83,10 @@ namespace Sark.Terminals
             h = math.max(1, h);
             _size = new int2(w, h);
 
+            _backend.Resize(w, h);
+
             _tiles.Dispose();
             _tiles = new TileData(w, h, _allocator);
-
-            _backend.Resize(w, h);
 
             ClearScreen();
 
@@ -81,41 +96,48 @@ namespace Sark.Terminals
         public void Set(int x, int y, Tile t)
         {
             _isDirty = true;
+            _backend.CompleteTileJob();
             _tiles.Set(x, y, t);
         }
 
         public void Set(int x, int y, char c)
         {
             _isDirty = true;
+            _backend.CompleteTileJob();
             _tiles.Set(x, y, c);
         }
 
         public void Set(int x, int y, Color fgColor, char c)
         {
             _isDirty = true;
+            _backend.CompleteTileJob();
             _tiles.Set(x, y, fgColor, c);
         }
 
         public void Set(int x, int y, Color fgColor, Color bgColor, char c)
         {
             _isDirty = true;
+            _backend.CompleteTileJob();
             _tiles.Set(x, y, fgColor, bgColor, c);
         }
 
         public void Circle(int x, int y, int radius)
         {
             _isDirty = true;
+            _backend.CompleteTileJob();
             _tiles.Circle(x, y, radius);
         }
 
         public void Print(int x, int y, string str)
         {
             _isDirty = true;
+            _backend.CompleteTileJob();
             _tiles.Print(x, y, str);
         }
 
         public NativeArray<Tile> ReadTiles(int x, int y, int len, Allocator allocator)
         {
+            _backend.CompleteTileJob();
             return _tiles.ReadTiles(x, y, len, allocator);
         }
 
@@ -124,6 +146,7 @@ namespace Sark.Terminals
         public void ClearScreen()
         {
             _isDirty = true;
+            _backend.CompleteTileJob();
             _tiles.ClearJob().Run();
         }
 
@@ -190,6 +213,14 @@ namespace Sark.Terminals
             _backend.Dispose();
         }
 
+        public SimpleTerminal WithTextAnchor(float2 textAnchor)
+        {
+            _backend.CompleteTileJob();
+            _tiles.Dispose();
+            _tiles = new TileData(_size.x, _size.y, textAnchor, _allocator);
+            return this;
+        }
+
         public SimpleTerminal WithTileSize(float2 tileSize)
         {
             if (tileSize.Equals(_tileSize))
@@ -203,7 +234,7 @@ namespace Sark.Terminals
 
         public bool IsInBounds(int2 tileIndex)
         {
-            return math.all(tileIndex >= 0) && math.all(tileIndex < _size);
+            return Grid2D.InBounds(tileIndex, _size);
         }
 
         public int2 PositionToTileIndex(float3 localPos)

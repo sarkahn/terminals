@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
+using Sark.Common.CameraExtensions;
+
 public class SpawnTest : MonoBehaviour
 {
 
@@ -24,6 +26,7 @@ public class SpawnTest : MonoBehaviour
     float alignY = 0;
 
     TerminalBehaviour _term;
+    TerminalBehaviour _halfTerm;
 
     IEnumerator Start()
     {
@@ -32,8 +35,18 @@ public class SpawnTest : MonoBehaviour
         yield return null;
         yield return null;
         _term = TerminalBehaviour.CreateAtScreenPosition("Terminal", 
-            10, 10, posX, posY, alignX, alignY);
-        
+            44, 1, posX, posY, alignX, alignY);
+        _term.Print(0, 0, "The quick brown fox jumps over the lazy dog.");
+
+        // Initial alignment fails since WithFont gets called after construction...
+        _halfTerm = TerminalBehaviour.CreateAtScreenPosition("HalfTerminal",
+            44, 1, posX, posY, alignX, alignY).WithFont("Terminal8x16");
+        _halfTerm.transform.position = Camera.main.GetAlignedViewportPosition(
+            new float2(0, 1),
+            new float2(1, -1),
+            _halfTerm.GetWorldSize().xy);
+        _halfTerm.transform.position += Vector3.down;
+        _halfTerm.Print(0, 0, "The quick brown fox jumps over the lazy dog.");
     }
 
     // Update is called once per frame
