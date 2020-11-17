@@ -32,6 +32,11 @@ namespace Sark.Terminals
         [SerializeField]
         bool _pixelSnap = true;
 
+        public int2 Size => _term.Size;
+        public int Width => _term.Width;
+        public int Height => _term.Height;
+        public int CellCount => _term.CellCount;
+
         private void OnEnable()
         {
             _term = new SimpleTerminal(_size.x, _size.y, Allocator.Persistent);
