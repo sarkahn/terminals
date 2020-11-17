@@ -120,6 +120,15 @@ namespace Sark.Terminals
             return new float2(w, h);
         }
 
+        public bool IsInBounds(int2 tileIndex) =>
+            _term.IsInBounds(tileIndex);
+
+        public int2 WorldPosToTileIndex(float3 worldPos)
+        {
+            float3 p = transform.InverseTransformPoint(worldPos);
+            return _term.PositionToTileIndex(p);
+        }
+
         float2 GetPixelWorldSize()
         {
             var tex = _renderer.sharedMaterial.mainTexture;
