@@ -200,5 +200,18 @@ namespace Sark.Terminals
             _backend.WithTileSize(tileSize);
             return this;
         }
+
+        public bool IsInBounds(int2 tileIndex)
+        {
+            return math.all(tileIndex >= 0) && math.all(tileIndex < _size);
+        }
+
+        public int2 PositionToTileIndex(float3 localPos)
+        {
+            float2 anchor = .5f;
+            localPos.xy += _size * anchor;
+            int2 p = (int2)math.floor(localPos.xy);
+            return p;
+        }
     }
 }
