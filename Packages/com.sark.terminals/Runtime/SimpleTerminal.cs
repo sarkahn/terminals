@@ -27,6 +27,7 @@ namespace Sark.Terminals
 
         public TileData Tiles => _tiles;
 
+        public int2 Size => _size;
         public int Width => _size.x;
         public int Height => _size.y;
         public int CellCount => _size.x * _size.y;
