@@ -12,6 +12,20 @@ public class WorldToConsolePos : MonoBehaviour
         _term = GetComponent<TerminalBehaviour>();
     }
 
+    private void Update()
+    {
+        var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        var p = _term.WorldPosToTileIndex(mousePos);
+
+        if (!_term.IsInBounds(p))
+            return;
+
+        if(Input.GetMouseButtonDown(0))
+        {
+            _term.Set(p.x, p.y, '.');
+        }
+    }
+
     private void OnGUI()
     {
         var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);

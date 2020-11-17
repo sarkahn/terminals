@@ -11,8 +11,10 @@ using Sark.Terminals.TerminalExtensions;
 [ExecuteAlways]
 public class Scramble : MonoBehaviour
 {
-
     TerminalBehaviour _term;
+
+    [SerializeField]
+    bool _disableAfterStart = false;
 
     private void OnEnable()
     {
@@ -22,6 +24,9 @@ public class Scramble : MonoBehaviour
     private void Update()
     {
         Go();
+
+        if (Application.isPlaying && _disableAfterStart)
+            enabled = false;
     }
 
     void Go()

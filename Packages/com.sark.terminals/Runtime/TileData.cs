@@ -15,16 +15,12 @@ namespace Sark.Terminals
         public int Length => Tiles.Length;
         public bool IsCreated => Tiles.IsCreated;
 
-        public TileData(int w, int h, float2 anchor, Allocator allocator)
+        public TileData(int w, int h, Allocator allocator)
         {
             Allocator = allocator;
             Size = new int2(w, h);
             Tiles = new NativeArray<Tile>(w * h, allocator);
         }
-
-        public TileData(int w, int h, Allocator allocator) :
-            this(w, h, .5f, allocator)
-        { }
 
         public Tile this[int i]
         {
