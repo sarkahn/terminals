@@ -82,6 +82,11 @@ namespace Sark.Terminals
             //Debug.Log($"Initializing backend with size {Size}");
         }
 
+        public void CompleteTileJob()
+        {
+            _tileDataJob.Complete();
+        }
+
         public SimpleMeshBackend WithTileSize(float2 s)
         {
             _tileSize = s;
@@ -91,6 +96,9 @@ namespace Sark.Terminals
 
         public void Resize(int w, int h)
         {
+            _tileDataJob.Complete();
+            _vertsJob.Complete();
+
             Size = new int2(w, h);
 
             int cellCount = w * h;

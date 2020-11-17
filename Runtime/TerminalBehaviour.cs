@@ -8,6 +8,10 @@ using UnityEngine;
 using Sark.Common.CameraExtensions;
 using System.Collections;
 
+// This code is based on the RLTK Terminals made for rust by TheBracket:
+// https://github.com/thebracket/bracket-lib/tree/master/bracket-terminal
+// https://github.com/thebracket/bracket-lib/blob/master/LICENSE
+
 namespace Sark.Terminals
 {
     [ExecuteAlways]
@@ -27,6 +31,16 @@ namespace Sark.Terminals
 
         Material _originalMat;
 
+        public Material Material
+        {
+            get => _renderer.sharedMaterial;
+            set
+            {
+                _renderer.sharedMaterial = value;
+                _term.WithTileSize(GetTileSize());
+            }
+        }
+
         public TileData Tiles => _term.Tiles;
 
         [SerializeField]
@@ -42,13 +56,19 @@ namespace Sark.Terminals
             _term = new SimpleTerminal(_size.x, _size.y, Allocator.Persistent);
 
             _renderer = GetComponent<MeshRenderer>();
-            GetComponent<MeshFilter>().sharedMesh = _term.Mesh;
-            if( _renderer.sharedMaterial == null )
+            var filter = GetComponent<MeshFilter>();
+            filter.sharedMesh = _term.Mesh;
+            filter.hideFlags = HideFlags.HideInInspector;
+            _renderer.hideFlags = HideFlags.HideInInspector;
+
+            if(Material == null)
             {
-                _renderer.sharedMaterial = Resources.Load<Material>(DefaultMaterialPath);
+                Material = Resources.Load<Material>(DefaultMaterialPath);
             }
 
             _originalMat = _renderer.sharedMaterial;
+
+            _term.WithTileSize(GetTileSize());
         }
 
         private void OnDisable()
@@ -56,6 +76,13 @@ namespace Sark.Terminals
             _term.Dispose();
 
             _renderer.sharedMaterial = _originalMat;
+        }
+
+        public TerminalBehaviour WithFont(string fontName)
+        {
+            var mat = Resources.Load<Material>(fontName);
+
+            return WithFont(mat);
         }
 
         public TerminalBehaviour WithFont(Material mat)
@@ -172,6 +199,10 @@ namespace Sark.Terminals
                 p.xy = MathUtil.roundedincrement(p.xy, size);
                 transform.position = p;
             }
+
+#if UNITY_EDITOR
+            CheckForEditorChanges();
+#endif
         }
 
         public void LateUpdate()
@@ -207,6 +238,20 @@ namespace Sark.Terminals
                 && _renderer.sharedMaterial.mainTexture != null)
 
             WithFont(_renderer.sharedMaterial);
+        }
+
+        Material _lastMat = null;
+
+        void CheckForEditorChanges()
+        {
+            if(Material != _lastMat)
+            {
+                _lastMat = Material;
+                _originalMat = Material;
+
+                var tileSize = GetTileSize();
+                _term.WithTileSize(tileSize);
+            }
         }
 #endif
 
