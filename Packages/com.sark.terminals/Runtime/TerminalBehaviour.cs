@@ -76,7 +76,11 @@ namespace Sark.Terminals
             return this;
         }
 
-        public void Resize(int w, int h) => _term.Resize(w, h);
+        public void Resize(int w, int h)
+        {
+            _size = new int2(w, h);
+            _term.Resize(w, h);
+        }
 
         public void Set(int x, int y, Tile t) => _term.Set(x, y, t);
 
