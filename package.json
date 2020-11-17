@@ -1,7 +1,7 @@
 {
   "name": "com.sark.terminals",
   "displayName": "Terminals",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "unity": "2020.2",
   "unityRelease": "0b10",
   "description": "Utilities for rendering pixel perfect ascii terminals in Unity.",
