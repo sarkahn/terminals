@@ -146,8 +146,15 @@ namespace Sark.Terminals
         public void ClearScreen()
         {
             _isDirty = true;
-            _backend.CompleteTileJob();
-            _tiles.ClearJob().Run();
+            if(_tiles.Allocator == Allocator.Temp)
+            {
+                _tiles.Clear();
+            }
+            else
+            {
+                _backend.CompleteTileJob();
+                _tiles.ClearJob().Run();
+            }
         }
 
         /// <summary>
@@ -211,14 +218,6 @@ namespace Sark.Terminals
         {
             _tiles.Dispose();
             _backend.Dispose();
-        }
-
-        public SimpleTerminal WithTextAnchor(float2 textAnchor)
-        {
-            _backend.CompleteTileJob();
-            _tiles.Dispose();
-            _tiles = new TileData(_size.x, _size.y, textAnchor, _allocator);
-            return this;
         }
 
         public SimpleTerminal WithTileSize(float2 tileSize)

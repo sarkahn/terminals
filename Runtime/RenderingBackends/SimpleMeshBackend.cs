@@ -198,7 +198,7 @@ namespace Sark.Terminals
             if (_allocator == Allocator.Temp)
             {
                 if (_sizeChanged)
-                    RebuildVertsRange(0, _verts.Length, Size, _tileSize, _verts, _indices);
+                    RebuildVertsRange(0, tiles.Length, Size, _tileSize, _verts, _indices);
 
                 RebuildTileDataRange(0, tiles.Length, tiles, _vertData);
             }
