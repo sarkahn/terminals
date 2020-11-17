@@ -1,3 +1,10 @@
+## [0.0.4](https://github.com/sarkahn/terminals/compare/v0.0.3...v0.0.4) (2020-11-17)
+
+
+### Bug Fixes
+
+* Added utility functions for interacting with terminals ([8d77c13](https://github.com/sarkahn/terminals/commit/8d77c1341befa2183e3406ec843fc55db3df21e5))
+
 ## [0.0.3](https://github.com/sarkahn/terminals/compare/v0.0.2...v0.0.3) (2020-11-17)
 
 
