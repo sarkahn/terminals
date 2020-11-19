@@ -1,3 +1,10 @@
+## [0.0.8](https://github.com/sarkahn/terminals/compare/v0.0.7...v0.0.8) (2020-11-19)
+
+
+### Bug Fixes
+
+* Added more set functions for setting tiles via bytes ([44acbc2](https://github.com/sarkahn/terminals/commit/44acbc2bf01f035fa7d8a1920b31b078078b9cf9))
+
 ## [0.0.7](https://github.com/sarkahn/terminals/compare/v0.0.6...v0.0.7) (2020-11-18)
 
 
