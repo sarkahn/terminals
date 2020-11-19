@@ -8,7 +8,6 @@ using UnityEngine;
 using Sark.Terminals.TerminalExtensions;
 using Sark.Common.GridUtil;
 
-// TODO : TerminalBehaviour with a 8x16 material font should automatically adjust it's own tilesize - ensure it works with cameraextension.align too
 // TODO : Add "box" functions for border (IE: border.WithCorners('a').WithTitle("Hello"))
 
 // This code is based on the RLTK Terminals made for rust by TheBracket:
@@ -66,6 +65,7 @@ namespace Sark.Terminals
 
             _backend = new SimpleMeshBackend(w, h, allocator).WithTileSize(_tileSize);
             _isDirty = true;
+            _isDirty = true;
             ClearScreen();
             ImmediateUpdate();
         }
@@ -105,6 +105,27 @@ namespace Sark.Terminals
             _isDirty = true;
             _backend.CompleteTileJob();
             _tiles.Set(x, y, c);
+        }
+
+        public void Set(int x, int y, byte b)
+        {
+            _isDirty = true;
+            _backend.CompleteTileJob();
+            _tiles.Set(x, y, b);
+        }
+
+        public void Set(int x, int y, Color fgColor, byte b)
+        {
+            _isDirty = true;
+            _backend.CompleteTileJob();
+            _tiles.Set(x, y, fgColor, b);
+        }
+
+        public void Set(int x, int y, Color fgColor, Color bgColor, byte b)
+        {
+            _isDirty = true;
+            _backend.CompleteTileJob();
+            _tiles.Set(x, y, fgColor, bgColor, b);
         }
 
         public void Set(int x, int y, Color fgColor, char c)
