@@ -25,34 +25,44 @@ namespace Sark.Terminals.TerminalExtensions
             tiles[i] = t;
         }
 
-        public static void Set(this TileData tiles, int x, int y, char c)
+        public static void Set(this TileData tiles, int x, int y, char c) =>
+            tiles.Set(x, y, ToCP437(c));
+
+        public static void Set(this TileData tiles, int x, int y, byte glyph)
         {
             int i = Grid2D.PosToIndex(x, y, tiles.Width);
 
             var t = tiles[i];
-            t.glyph = ToCP437(c);
+            t.glyph = glyph;
             tiles[i] = t;
         }
-        public static void Set(this TileData tiles, int x, int y, Color fgColor, char c)
+
+        public static void Set(this TileData tiles, int x, int y, Color fgColor, byte glyph)
         {
             int i = Grid2D.PosToIndex(x, y, tiles.Width);
 
             var t = tiles[i];
-            t.glyph = ToCP437(c);
             t.fgColor = fgColor;
+            t.glyph = glyph;
             tiles[i] = t;
         }
-        public static void Set(this TileData tiles, 
-            int x, int y, Color fgColor, Color bgColor, char c)
+        public static void Set(this TileData tiles, int x, int y, Color fgColor, char c) =>
+            tiles.Set(x, y, fgColor, ToCP437(c));
+
+        public static void Set(this TileData tiles, int x, int y, 
+            Color fgColor, Color bgColor, byte glyph)
         {
             int i = Grid2D.PosToIndex(x, y, tiles.Width);
 
             var t = tiles[i];
-            t.glyph = ToCP437(c);
             t.fgColor = fgColor;
             t.bgColor = bgColor;
+            t.glyph = glyph;
             tiles[i] = t;
         }
+        public static void Set(this TileData tiles,
+            int x, int y, Color fgColor, Color bgColor, char c) =>
+            tiles.Set(x, y, fgColor, bgColor, ToCP437(c));
 
         public static void Clear(this TileData tiles)
         {

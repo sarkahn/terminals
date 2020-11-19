@@ -1,9 +1,11 @@
+[![openupm](https://img.shields.io/npm/v/com.sark.terminals?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.sark.terminals/)
 # Terminals
 
 Tools for rendering a pixel perfect ascii terminal in Unity.
 
 ## How to Use
-TODO
+
+For more complete samples see https://openupm.com/packages/com.sark.rltk_unity/
 
 ## How to Install
 
